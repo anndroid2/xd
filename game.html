@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>SystemPilot — Simulation</title>
+<link rel="stylesheet" href="game.css">
+</head>
+
+<body>
+    <canvas id="hackRain"></canvas>
+
+
+<div class="bg"></div>
+
+<!-- HUD -->
+<div class="hud">
+    <div>👤 GhostNode</div>
+    <div>⭐ Lv <span id="lv">1</span></div>
+    <div>💰 <span id="money">0</span></div>
+    <div>⚠ Risk <span id="risk">0</span>%</div>
+</div>
+
+<!-- STORY CARD -->
+<div class="story-card" id="story">
+    Kapcsolódás egy teszt hálózathoz...
+</div>
+
+<!-- DECISIONS -->
+<div class="choices">
+    <div class="choice" onclick="choose('scan')">🛰 Megfigyelés</div>
+    <div class="choice" onclick="choose('exploit')">🔓 Behatolás</div>
+    <div class="choice" onclick="choose('cover')">🧹 Nyom eltakarítás</div>
+</div>
+
+<script src="game.js"></script>
+</body>
+</html>
