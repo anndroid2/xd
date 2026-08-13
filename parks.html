@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BikeX – Utazástervező</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #0a0a0f; color: #fff; font-family: system-ui, sans-serif; }
+
+    .g  { background: linear-gradient(135deg, #3b82f6, #8b5cf6); }
+    .gt { background: linear-gradient(90deg, #3b82f6, #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+    header { background: rgba(18,18,26,.97); border-bottom: 1px solid #1f2937; position: sticky; top: 0; z-index: 50; backdrop-filter: blur(14px); }
+    .hinner { max-width: 1300px; margin: 0 auto; padding: 0 1.5rem; display: flex; align-items: center; justify-content: space-between; height: 4rem; }
+    nav a { color: #9ca3af; font-size: .875rem; text-decoration: none; }
+    nav a:hover { color: #fff; }
+    nav a.active { color: #3b82f6; font-weight: 600; }
+
+    .btn { display: inline-flex; align-items: center; gap: .4rem; border: none; cursor: pointer; font-weight: 600; border-radius: .5rem; padding: .5rem 1.1rem; font-size: .875rem; transition: all .2s; }
+    .btn-blue { background: linear-gradient(135deg, #3b82f6, #8b5cf6); color: #fff; }
+    .btn-blue:hover { opacity: .88; }
+    .btn-ghost { background: transparent; border: 1px solid #374151; color: #9ca3af; }
+    .btn-ghost:hover { border-color: #6b7280; color: #fff; }
+
+    .card { background: #12121a; border: 1px solid #1f2937; border-radius: .875rem; overflow: hidden; }
+    .card-body { padding: 1.25rem; }
+    .card-title { font-weight: 700; font-size: 1rem; margin-bottom: 1rem; }
+
+    input, select { background: #1f2937; border: 1px solid #374151; color: #fff; border-radius: .5rem; padding: .6rem .9rem; font-size: .875rem; outline: none; width: 100%; transition: border-color .2s; }
+    input:focus, select:focus { border-color: #3b82f6; }
+    input::placeholder { color: #6b7280; }
+    select option { background: #1f2937; }
+    label { display: block; font-size: .75rem; color: #9ca3af; margin-bottom: .3rem; font-weight: 500; }
+
+    .step-dot { width: 1.8rem; height: 1.8rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: .8rem; font-weight: 700; flex-shrink: 0; transition: all .3s; }
+    .step-line { flex: 1; height: 2px; background: #374151; margin-top: -.85rem; transition: background .3s; }
+
+    .transport-row { display: flex; align-items: center; justify-content: space-between; padding: .85rem 1rem; background: #1f2937; border-radius: .6rem; margin-bottom: .6rem; cursor: pointer; transition: all .2s; border: 2px solid transparent; }
+    .transport-row:hover { background: #283141; }
+    .transport-row.sel { border-color: #3b82f6; background: rgba(59,130,246,.08); }
+
+    .hotel-row { display: flex; align-items: center; gap: .85rem; padding: .85rem 1rem; background: #1f2937; border-radius: .6rem; margin-bottom: .6rem; }
+    .attr-row { display: flex; align-items: center; justify-content: space-between; padding: .65rem .85rem; background: #1f2937; border-radius: .6rem; margin-bottom: .5rem; }
+
+    .tip-card { background: rgba(59,130,246,.06); border: 1px solid rgba(59,130,246,.2); border-radius: .75rem; padding: 1rem; margin-bottom: .75rem; }
+
+    .summary-row { display: flex; justify-content: space-between; padding: .6rem 0; border-bottom: 1px solid #1f2937; font-size: .875rem; }
+    .summary-row:last-child { border: none; }
+
+    .pack-item { display: flex; align-items: center; gap: .4rem; background: #1f2937; border-radius: .4rem; padding: .45rem .65rem; cursor: pointer; font-size: .8rem; transition: opacity .2s; }
+    .pack-item.done { opacity: .45; }
+
+    footer { background: #12121a; border-top: 1px solid #1f2937; padding: 1.75rem; text-align: center; color: #6b7280; font-size: .875rem; margin-top: 3rem; }
+
+    @media (max-width: 900px) {
+      .main-grid { grid-template-columns: 1fr !important; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="hinner">
+    <a href="index.html" style="display:flex;align-items:center;gap:.5rem;text-decoration:none">
+      <div class="g" style="width:2.25rem;height:2.25rem;border-radius:.6rem;display:flex;align-items:center;justify-content:center">
+        <svg style="width:1.2rem;height:1.2rem" fill="none" stroke="#fff" stroke-width="2" viewBox="0 0 24 24">
+          <circle cx="5.5" cy="17.5" r="2.5"/><circle cx="18.5" cy="17.5" r="2.5"/>
+          <path d="M8 17.5h7M5.5 17.5L8 10l4-4h4l2.5 7M8 10h8"/>
+        </svg>
+      </div>
+      <span style="font-size:1.3rem;font-weight:800" class="gt">BikeX</span>
+    </a>
+    <nav style="display:flex;align-items:center;gap:1.25rem">
+      <a href="index.html">Főoldal</a>
+      <a href="marketplace.html">Marketplace</a>
+      <a href="parks.html">Parks</a>
+      <a href="#" class="active">Travel</a>
+      <a href="login.html" style="border:1px solid #374151;padding:.4rem .9rem;border-radius:.5rem">Belépés</a>
+      <a href="register.html" class="btn btn-blue" style="text-decoration:none;font-size:.875rem">Regisztráció</a>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<section style="background:#12121a;padding:3rem 1.5rem 2.5rem;border-bottom:1px solid #1f2937;text-align:center">
+  <div style="max-width:1300px;margin:0 auto">
+    <span style="display:inline-flex;align-items:center;gap:.5rem;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.25);border-radius:9999px;padding:.3rem 1rem;font-size:.78rem;color:#22c55e;margin-bottom:1rem">
+      ✈️ Kerékpáros utazástervező
+    </span>
+    <h1 style="font-size:clamp(1.6rem,4vw,2.75rem);font-weight:800;margin-bottom:.6rem" class="gt">Tervezd meg a Bike Kalandod!</h1>
+    <p style="color:#9ca3af;max-width:500px;margin:0 auto">Teljes utazástervező eszközök a következő kerékpáros úticélodhoz — repülő, szállás, látnivalók egy helyen</p>
+  </div>
+</section>
+
+<!-- FŐ TARTALOM -->
+<main style="max-width:1300px;margin:0 auto;padding:2rem 1.5rem">
+  <div class="main-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:1.75rem;align-items:start">
+
+    <!-- BAL: Tervező -->
+    <div>
+
+      <!-- Lépés wizard -->
+      <div class="card" style="margin-bottom:1.25rem">
+        <div class="card-body">
+          <h3 class="card-title">🗺 Útvonaltervező</h3>
+
+          <!-- Progress indikátor -->
+          <div style="display:flex;align-items:center;margin-bottom:1.75rem">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:.25rem">
+              <div class="step-dot" id="sd1" style="background:#3b82f6;color:#fff">1</div>
+              <span style="font-size:.68rem;color:#3b82f6;font-weight:600;white-space:nowrap">Útvonal</span>
+            </div>
+            <div class="step-line" id="sl1"></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:.25rem">
+              <div class="step-dot" id="sd2" style="background:#374151;color:#9ca3af">2</div>
+              <span style="font-size:.68rem;color:#9ca3af;white-space:nowrap" id="sl2lbl">Szállás</span>
+            </div>
+            <div class="step-line" id="sl2"></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:.25rem">
+              <div class="step-dot" id="sd3" style="background:#374151;color:#9ca3af">3</div>
+              <span style="font-size:.68rem;color:#9ca3af;white-space:nowrap" id="sl3lbl">Összefoglalás</span>
+            </div>
+          </div>
+
+          <!-- 1. LÉPÉS: Útvonal -->
+          <div id="step1">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:.85rem">
+              <div>
+                <label>Honnan indulsz?</label>
+                <input type="text" id="inp_from" placeholder="Pl. Budapest, HU" value="Budapest, HU"/>
+              </div>
+              <div>
+                <label>Úticél</label>
+                <input type="text" id="inp_to" placeholder="Pl. Whistler, BC" value="Whistler, BC"/>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem;margin-bottom:.85rem">
+              <div>
+                <label>Indulás</label>
+                <input type="date" id="inp_from_date" value="2026-09-15"/>
+              </div>
+              <div>
+                <label>Visszaút</label>
+                <input type="date" id="inp_to_date" value="2026-09-22"/>
+              </div>
+              <div>
+                <label>Utazók</label>
+                <select id="inp_travelers">
+                  <option value="1">1 fő</option>
+                  <option value="2" selected>2 fő</option>
+                  <option value="3">3 fő</option>
+                  <option value="4">4 fő</option>
+                </select>
+              </div>
+            </div>
+            <div style="margin-bottom:.85rem">
+              <label>Kerékpár típus</label>
+              <select id="inp_biketype" onchange="generatePackingList()">
+                <option value="mtb">🏔 Mountain Bike</option>
+                <option value="road">🚴 Országúti</option>
+                <option value="ebike">⚡ E-Bike</option>
+                <option value="gravel">🪨 Gravel</option>
+              </select>
+            </div>
+            <div style="margin-bottom:1.25rem">
+              <label>Kerékpárt viszek magammal?</label>
+              <div style="display:flex;gap:.6rem;margin-top:.3rem">
+                <button id="bikeYes" class="btn" onclick="selectBike(true)"
+                  style="flex:1;justify-content:center;background:rgba(59,130,246,.15);border:1px solid #3b82f6;color:#3b82f6;font-size:.8rem">
+                  ✅ Igen, saját kerékpár
+                </button>
+                <button id="bikeNo" class="btn" onclick="selectBike(false)"
+                  style="flex:1;justify-content:center;background:#1f2937;border:1px solid #374151;color:#9ca3af;font-size:.8rem">
+                  🔄 Nem, bérelek
+                </button>
+              </div>
+            </div>
+            <button class="btn btn-blue" style="width:100%;justify-content:center;padding:.65rem" onclick="goStep(2)">
+              Tovább: Szállás →
+            </button>
+          </div>
+
+          <!-- 2. LÉPÉS: Szállás -->
+          <div id="step2" style="display:none">
+            <div style="margin-bottom:.85rem">
+              <label>Szállás típusa</label>
+              <select id="inp_accom">
+                <option value="hotel">🏨 Hotel</option>
+                <option value="hostel">🛏 Hostel</option>
+                <option value="camping">⛺ Kemping</option>
+                <option value="airbnb">🏡 Airbnb</option>
+              </select>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:.85rem">
+              <div>
+                <label>Max. éjszakai ár (€)</label>
+                <input type="number" id="inp_maxprice" placeholder="150" value="150"/>
+              </div>
+              <div>
+                <label>Távolság a parktól</label>
+                <select id="inp_parkdist">
+                  <option value="1">Max. 1 km</option>
+                  <option value="3" selected>Max. 3 km</option>
+                  <option value="10">Max. 10 km</option>
+                </select>
+              </div>
+            </div>
+            <div style="margin-bottom:1.25rem">
+              <label>Kerékpár tárolás</label>
+              <select id="inp_bikestore">
+                <option value="required">Szükséges</option>
+                <option value="preferred">Előnyös</option>
+                <option value="notneeded">Nem szükséges</option>
+              </select>
+            </div>
+            <div style="display:flex;gap:.75rem">
+              <button class="btn btn-ghost" style="flex:1;justify-content:center" onclick="goStep(1)">← Vissza</button>
+              <button class="btn btn-blue" style="flex:2;justify-content:center;padding:.65rem" onclick="goStep(3)">
+                Összefoglalás →
+              </button>
+            </div>
+          </div>
+
+          <!-- 3. LÉPÉS: Összefoglalás -->
+          <div id="step3" style="display:none">
+            <div style="background:#0a0a0f;border:1px solid #1f2937;border-radius:.75rem;padding:1.1rem;margin-bottom:1rem">
+              <h4 style="font-weight:700;font-size:.875rem;margin-bottom:.75rem;color:#9ca3af;text-transform:uppercase;letter-spacing:.05em">Összefoglalás</h4>
+              <div class="summary-row"><span style="color:#9ca3af">Útvonal</span><span id="s_route" style="font-weight:600"></span></div>
+              <div class="summary-row"><span style="color:#9ca3af">Dátumok</span><span id="s_dates" style="font-weight:600"></span></div>
+              <div class="summary-row"><span style="color:#9ca3af">Utazók</span><span id="s_travelers" style="font-weight:600"></span></div>
+              <div class="summary-row"><span style="color:#9ca3af">Kerékpár</span><span id="s_bike" style="font-weight:600"></span></div>
+              <div class="summary-row"><span style="color:#9ca3af">Szállás típusa</span><span id="s_accom" style="font-weight:600"></span></div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding-top:.75rem;margin-top:.25rem;border-top:1px solid #374151">
+                <span style="font-weight:700">Becsült összköltség</span>
+                <span id="s_total" style="font-weight:900;color:#3b82f6;font-size:1.2rem"></span>
+              </div>
+            </div>
+            <div style="display:flex;gap:.75rem">
+              <button class="btn btn-ghost" style="flex:1;justify-content:center" onclick="goStep(2)">← Vissza</button>
+              <button class="btn btn-blue" style="flex:2;justify-content:center;padding:.65rem" onclick="bookTrip()">
+                ✈️ Foglalás indítása
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tippek -->
+      <div class="card">
+        <div class="card-body">
+          <h3 class="card-title">💡 Kerékpáros utazási tippek</h3>
+          <div class="tip-card">
+            <div style="font-weight:700;font-size:.875rem;margin-bottom:.3rem">✈️ Repülőn kerékpárral</div>
+            <p style="color:#9ca3af;font-size:.8rem;line-height:1.65">A legtöbb légitársaság engedélyezi a kerékpár szállítását $30–$150 felárral. Szerelje szét és csomagolja keménytokban — jelölje meg a pedalokat és a nyerget.</p>
+          </div>
+          <div class="tip-card">
+            <div style="font-weight:700;font-size:.875rem;margin-bottom:.3rem">🔧 Alapfelszerelés külföldi túrára</div>
+            <p style="color:#9ca3af;font-size:.8rem;line-height:1.65">Mindig vigyen: defektjavító készletet, multi-tool-t, pumpa adaptert, pótfékbetéteket és egy pár belső gumit. Külföldön nehéz megfelelő alkatrészt találni.</p>
+          </div>
+          <div class="tip-card">
+            <div style="font-weight:700;font-size:.875rem;margin-bottom:.3rem">🌍 Sportkárbiztosítás</div>
+            <p style="color:#9ca3af;font-size:.8rem;line-height:1.65">Kössön sportkárbiztosítást, ami kifejezetten kerékpározásra érvényes. Az alap utasbiztosítás általában nem fedezi a kerékpáros sérüléseket.</p>
+          </div>
+          <div class="tip-card">
+            <div style="font-weight:700;font-size:.875rem;margin-bottom:.3rem">📱 Hasznos appok</div>
+            <p style="color:#9ca3af;font-size:.8rem;line-height:1.65"><strong style="color:#fff">Trailforks</strong> – trail térkép &nbsp;·&nbsp; <strong style="color:#fff">Komoot</strong> – útvonaltervező &nbsp;·&nbsp; <strong style="color:#fff">iOverlander</strong> – kemping &nbsp;·&nbsp; <strong style="color:#fff">Wahoo</strong> – navigáció</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- JOBB: Eredmények -->
+    <div style="display:flex;flex-direction:column;gap:1.25rem">
+
+      <!-- Közlekedés -->
+      <div class="card">
+        <div class="card-body">
+          <h3 class="card-title">🚌 Közlekedési lehetőségek</h3>
+          <div class="transport-row sel" id="tr_0" onclick="selectTransport(0)">
+            <div style="display:flex;align-items:center;gap:.85rem">
+              <div class="g" style="width:2.75rem;height:2.75rem;border-radius:.5rem;display:flex;align-items:center;justify-content:center;font-size:1.25rem;flex-shrink:0">✈️</div>
+              <div>
+                <div style="font-weight:700;font-size:.875rem">Közvetlen repülőjárat</div>
+                <div style="color:#9ca3af;font-size:.78rem">Menetidő: 2 ó 45 perc · Budapest → Vancouver</div>
+              </div>
+            </div>
+            <div style="text-align:right;flex-shrink:0">
+              <div style="font-weight:800;color:#3b82f6;font-size:1rem">$320</div>
+              <div style="color:#9ca3af;font-size:.72rem">/fő</div>
+            </div>
+          </div>
+          <div class="transport-row" id="tr_1" onclick="selectTransport(1)">
+            <div style="display:flex;align-items:center;gap:.85rem">
+              <div style="background:#1f2937;width:2.75rem;height:2.75rem;border-radius:.5rem;display:flex;align-items:center;justify-content:center;font-size:1.25rem;flex-shrink:0">🚂</div>
+              <div>
+                <div style="font-weight:700;font-size:.875rem">Vonat + Busz</div>
+                <div style="color:#9ca3af;font-size:.78rem">Menetidő: 6 ó 30 perc · Több átszállással</div>
+              </div>
+            </div>
+            <div style="text-align:right;flex-shrink:0">
+              <div style="font-weight:800;color:#3b82f6;font-size:1rem">$85</div>
+              <div style="color:#9ca3af;font-size:.72rem">/fő</div>
+            </div>
+          </div>
+          <div class="transport-row" id="tr_2" onclick="selectTransport(2)">
+            <div style="display:flex;align-items:center;gap:.85rem">
+              <div style="background:#1f2937;width:2.75rem;height:2.75rem;border-radius:.5rem;display:flex;align-items:center;justify-content:center;font-size:1.25rem;flex-shrink:0">🚗</div>
+              <div>
+                <div style="font-weight:700;font-size:.875rem">Autóbérlés</div>
+                <div style="color:#9ca3af;font-size:.78rem">Menetidő: 5 óra · Teljesen rugalmas</div>
+              </div>
+            </div>
+            <div style="text-align:right;flex-shrink:0">
+              <div style="font-weight:800;color:#3b82f6;font-size:1rem">$120</div>
+              <div style="color:#9ca3af;font-size:.72rem">/nap</div>
+            </div>
+          </div>
+          <div class="transport-row" id="tr_3" onclick="selectTransport(3)">
+            <div style="display:flex;align-items:center;gap:.85rem">
+              <div style="background:#1f2937;width:2.75rem;height:2.75rem;border-radius:.5rem;display:flex;align-items:center;justify-content:center;font-size:1.25rem;flex-shrink:0">🚌</div>
+              <div>
+                <div style="font-weight:700;font-size:.875rem">Távolsági Busz</div>
+                <div style="color:#9ca3af;font-size:.78rem">Menetidő: 8 ó 15 perc · Kerékpár szállítással</div>
+              </div>
+            </div>
+            <div style="text-align:right;flex-shrink:0">
+              <div style="font-weight:800;color:#3b82f6;font-size:1rem">$45</div>
+              <div style="color:#9ca3af;font-size:.72rem">/fő</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Szállás -->
+      <div class="card">
+        <div class="card-body">
+          <h3 class="card-title">🏨 Ajánlott szálláshelyek</h3>
+          <div class="hotel-row">
+            <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=150&q=80"
+              style="width:72px;height:56px;object-fit:cover;border-radius:.45rem;flex-shrink:0"
+              onerror="this.style.background='#1f2937'"/>
+            <div style="flex:1;min-width:0">
+              <div style="font-weight:700;font-size:.875rem;margin-bottom:.15rem">Alpine Resort Whistler</div>
+              <div style="color:#f59e0b;font-size:.75rem;margin-bottom:.15rem">⭐ 4.8 (324 vélemény)</div>
+              <div style="color:#9ca3af;font-size:.75rem">📍 0.5 km · 🚲 Bike tároló ✓</div>
+            </div>
+            <div style="text-align:right;flex-shrink:0">
+              <div style="font-weight:800;color:#3b82f6">$180</div>
+              <div style="color:#9ca3af;font-size:.72rem">/éjszaka</div>
+            </div>
+          </div>
+          <div class="hotel-row">
+            <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=150&q=80"
+              style="width:72px;height:56px;object-fit:cover;border-radius:.45rem;flex-shrink:0"
+              onerror="this.style.background='#1f2937'"/>
+            <div style="flex:1;min-width:0">
+              <div style="font-weight:700;font-size:.875rem;margin-bottom:.15rem">Mountain Lodge</div>
+              <div style="color:#f59e0b;font-size:.75rem;margin-bottom:.15rem">⭐ 4.6 (198 vélemény)</div>
+              <div style="color:#9ca3af;font-size:.75rem">📍 1.2 km · 🔧 Szerszámszoba ✓</div>
+            </div>
+            <div style="text-align:right;flex-shrink:0">
+              <div style="font-weight:800;color:#3b82f6">$145</div>
+              <div style="color:#9ca3af;font-size:.72rem">/éjszaka</div>
+            </div>
+          </div>
+          <div class="hotel-row">
+            <img src="https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=150&q=80"
+              style="width:72px;height:56px;object-fit:cover;border-radius:.45rem;flex-shrink:0"
+              onerror="this.style.background='#1f2937'"/>
+            <div style="flex:1;min-width:0">
+              <div style="font-weight:700;font-size:.875rem;margin-bottom:.15rem">Riders Hostel</div>
+              <div style="color:#f59e0b;font-size:.75rem;margin-bottom:.15rem">⭐ 4.3 (89 vélemény)</div>
+              <div style="color:#9ca3af;font-size:.75rem">📍 0.8 km · 🚿 Mosó, szárító ✓</div>
+            </div>
+            <div style="text-align:right;flex-shrink:0">
+              <div style="font-weight:800;color:#3b82f6">$55</div>
+              <div style="color:#9ca3af;font-size:.72rem">/éjszaka</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Látnivalók -->
+      <div class="card">
+        <div class="card-body">
+          <h3 class="card-title">🗺 Közeli látnivalók</h3>
+          <div class="attr-row">
+            <div style="display:flex;align-items:center;gap:.65rem">
+              <span style="font-size:1.3rem">🏊</span>
+              <div>
+                <div style="font-weight:600;font-size:.875rem">Alta Lake</div>
+                <div style="color:#9ca3af;font-size:.75rem">2.3 km · Kristálytiszta hegyi tó</div>
+              </div>
+            </div>
+            <span style="color:#3b82f6;font-size:.78rem;font-weight:600;white-space:nowrap">Úszás</span>
+          </div>
+          <div class="attr-row">
+            <div style="display:flex;align-items:center;gap:.65rem">
+              <span style="font-size:1.3rem">📸</span>
+              <div>
+                <div style="font-weight:600;font-size:.875rem">Whistler Lookout</div>
+                <div style="color:#9ca3af;font-size:.75rem">1.8 km · Panoráma kilátó</div>
+              </div>
+            </div>
+            <span style="color:#3b82f6;font-size:.78rem;font-weight:600;white-space:nowrap">Fotózás</span>
+          </div>
+          <div class="attr-row">
+            <div style="display:flex;align-items:center;gap:.65rem">
+              <span style="font-size:1.3rem">🛍️</span>
+              <div>
+                <div style="font-weight:600;font-size:.875rem">Whistler Village</div>
+                <div style="color:#9ca3af;font-size:.75rem">3.1 km · Éttermek és bevásárlás</div>
+              </div>
+            </div>
+            <span style="color:#3b82f6;font-size:.78rem;font-weight:600;white-space:nowrap">Vásárlás</span>
+          </div>
+          <div class="attr-row">
+            <div style="display:flex;align-items:center;gap:.65rem">
+              <span style="font-size:1.3rem">🧖</span>
+              <div>
+                <div style="font-weight:600;font-size:.875rem">Scandinave Spa</div>
+                <div style="color:#9ca3af;font-size:.75rem">2.1 km · Skandináv wellness</div>
+              </div>
+            </div>
+            <span style="color:#3b82f6;font-size:.78rem;font-weight:600;white-space:nowrap">Wellness</span>
+          </div>
+          <div class="attr-row">
+            <div style="display:flex;align-items:center;gap:.65rem">
+              <span style="font-size:1.3rem">🦅</span>
+              <div>
+                <div style="font-weight:600;font-size:.875rem">Peak 2 Peak Gondola</div>
+                <div style="color:#9ca3af;font-size:.75rem">0.9 km · Világhírű kabinos</div>
+              </div>
+            </div>
+            <span style="color:#3b82f6;font-size:.78rem;font-weight:600;white-space:nowrap">Látvány</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Csomaglista -->
+      <div class="card">
+        <div class="card-body">
+          <h3 class="card-title">🎒 Csomaglista</h3>
+          <div id="packingList" style="display:grid;grid-template-columns:1fr 1fr;gap:.45rem"></div>
+          <button class="btn btn-ghost" style="width:100%;justify-content:center;margin-top:.85rem;padding:.55rem" onclick="generatePackingList()">
+            🔄 Lista újragenerálása
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:.5rem">
+    <div class="g" style="width:1.75rem;height:1.75rem;border-radius:.4rem;display:flex;align-items:center;justify-content:center">
+      <svg style="width:1rem;height:1rem" fill="none" stroke="#fff" stroke-width="2" viewBox="0 0 24 24">
+        <circle cx="5.5" cy="17.5" r="2.5"/><circle cx="18.5" cy="17.5" r="2.5"/>
+        <path d="M8 17.5h7M5.5 17.5L8 10l4-4h4l2.5 7M8 10h8"/>
+      </svg>
+    </div>
+    <span style="font-weight:700;color:#fff" class="gt">BikeX</span>
+  </div>
+  <p>© 2026 BikeX · Minden jog fenntartva</p>
+</footer>
+
+<script>
+// ── Állapot ────────────────────────────────────────────────────────────
+var bikeOwn = true;
+var currentStep = 1;
+
+// ── Kerékpár választó ──────────────────────────────────────────────────
+function selectBike(own) {
+  bikeOwn = own;
+  var yes = document.getElementById('bikeYes');
+  var no  = document.getElementById('bikeNo');
+  yes.style.background    = own ? 'rgba(59,130,246,.15)' : '#1f2937';
+  yes.style.borderColor   = own ? '#3b82f6' : '#374151';
+  yes.style.color         = own ? '#3b82f6' : '#9ca3af';
+  no.style.background     = !own ? 'rgba(59,130,246,.15)' : '#1f2937';
+  no.style.borderColor    = !own ? '#3b82f6' : '#374151';
+  no.style.color          = !own ? '#3b82f6' : '#9ca3af';
+}
+
+// ── Lépés kezelő ──────────────────────────────────────────────────────
+function goStep(n) {
+  // Panelek
+  document.getElementById('step1').style.display = n === 1 ? '' : 'none';
+  document.getElementById('step2').style.display = n === 2 ? '' : 'none';
+  document.getElementById('step3').style.display = n === 3 ? '' : 'none';
+
+  // Indikátorok
+  var dots = [
+    document.getElementById('sd1'),
+    document.getElementById('sd2'),
+    document.getElementById('sd3')
+  ];
+  var lbls = [
+    null,
+    document.getElementById('sl2lbl'),
+    document.getElementById('sl3lbl')
+  ];
+
+  for (var i = 0; i < 3; i++) {
+    var step = i + 1;
+    if (step < n) {
+      dots[i].style.background = '#22c55e';
+      dots[i].style.color = '#fff';
+      dots[i].textContent = '✓';
+    } else if (step === n) {
+      dots[i].style.background = '#3b82f6';
+      dots[i].style.color = '#fff';
+      dots[i].textContent = String(step);
+    } else {
+      dots[i].style.background = '#374151';
+      dots[i].style.color = '#9ca3af';
+      dots[i].textContent = String(step);
+    }
+    if (lbls[i]) {
+      lbls[i].style.color = step <= n ? '#3b82f6' : '#9ca3af';
+    }
+  }
+
+  currentStep = n;
+  if (n === 3) buildSummary();
+}
+
+// ── Összefoglalás ──────────────────────────────────────────────────────
+function buildSummary() {
+  var from   = document.getElementById('inp_from').value || '—';
+  var to     = document.getElementById('inp_to').value   || '—';
+  var df     = document.getElementById('inp_from_date').value;
+  var dt     = document.getElementById('inp_to_date').value;
+  var trv    = document.getElementById('inp_travelers').value;
+  var bikeEl = document.getElementById('inp_biketype');
+  var acEl   = document.getElementById('inp_accom');
+
+  var nights = 7;
+  if (df && dt) {
+    var diff = (new Date(dt) - new Date(df)) / 86400000;
+    nights = Math.max(1, Math.ceil(diff));
+  }
+
+  var flightCost = 320 * parseInt(trv);
+  var hotelCost  = 165 * nights;
+  var total = flightCost + hotelCost + 120;
+
+  var bikeTxt = bikeEl.options[bikeEl.selectedIndex].text;
+  var acTxt   = acEl.options[acEl.selectedIndex].text;
+
+  document.getElementById('s_route').textContent    = from + ' → ' + to;
+  document.getElementById('s_dates').textContent    = (df || '—') + ' – ' + (dt || '—') + ' (' + nights + ' éj)';
+  document.getElementById('s_travelers').textContent= trv + ' fő';
+  document.getElementById('s_bike').textContent     = bikeTxt + (bikeOwn ? ' (saját)' : ' (bérel)');
+  document.getElementById('s_accom').textContent    = acTxt;
+  document.getElementById('s_total').textContent    = '$' + total.toLocaleString('hu-HU');
+}
+
+// ── Közlekedés választó ────────────────────────────────────────────────
+function selectTransport(idx) {
+  for (var i = 0; i < 4; i++) {
+    var el = document.getElementById('tr_' + i);
+    if (i === idx) {
+      el.classList.add('sel');
+    } else {
+      el.classList.remove('sel');
+    }
+  }
+}
+
+// ── Foglalás ───────────────────────────────────────────────────────────
+function bookTrip() {
+  alert('✈️ Foglalás megkezdve!\n\nAz éles BikeX appban itt csatlakozik a foglalási rendszer.\nRepülő + szállás egy helyen.\n\nKöszönjük a bizalmat! 🚲');
+}
+
+// ── Csomaglista ────────────────────────────────────────────────────────
+var PACK = {
+  mtb:   ['🪖 MTB Sisak','🥽 Szemüveg','🧤 Kesztyű','🩳 Bike nadrág','👕 Jersey','🦵 Térdbetét','🦵 Könyökbetét','🔧 Multi-tool','🫙 Láncolaj','💨 Mini pumpa','🩹 Defekt javító','🎒 Hydration pack'],
+  road:  ['🪖 Aero Sisak','🥽 Napszemüveg','🧤 Road kesztyű','🩳 Lycra nadrág','👟 Kattanós cipő','🔧 Multi-tool','💨 CO2 patron','🩹 Defekt javító','🍌 Energiazselé','📱 Kerékpár computer','💡 Lámpa szett','🧴 Naptej'],
+  ebike: ['🪖 Sisak','🔌 Töltőkábel','🔋 Tartalék akksi','📱 Telefontartó','🔧 Multi-tool','💨 Pumpa','🩹 Defekt javító','🧤 Kesztyű','🌂 Esőkabát','💡 Lámpa','🔑 Zár','📄 Biztosítás'],
+  gravel:['🪖 Sisak','🥽 Szemüveg','🧤 Kesztyű','👟 Cipő','🔧 Multi-tool','🌂 Esőkabát','💨 Pumpa','🩹 Defekt javító','🍌 Snack','💧 Kulacs','🗺 GPS','📷 Kamera']
+};
+
+function generatePackingList() {
+  var type = document.getElementById('inp_biketype').value;
+  var items = PACK[type] || PACK.mtb;
+  var html = '';
+  for (var i = 0; i < items.length; i++) {
+    html += '<div class="pack-item" onclick="togglePackItem(this)">' +
+              '<span style="color:#22c55e;font-size:.8rem;flex-shrink:0">✓</span>' +
+              '<span>' + items[i] + '</span>' +
+            '</div>';
+  }
+  document.getElementById('packingList').innerHTML = html;
+}
+
+function togglePackItem(el) {
+  var dot = el.querySelector('span:first-child');
+  if (el.classList.contains('done')) {
+    el.classList.remove('done');
+    dot.textContent = '✓';
+    dot.style.color = '#22c55e';
+  } else {
+    el.classList.add('done');
+    dot.textContent = '☐';
+    dot.style.color = '#6b7280';
+  }
+}
+
+// ── Init ───────────────────────────────────────────────────────────────
+generatePackingList();
+</script>
+</body>
+</html>

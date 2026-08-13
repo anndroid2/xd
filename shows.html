@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BikeX – Bike Shows</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{background:#0a0a0f;color:#fff;font-family:system-ui,sans-serif}
+    .g{background:linear-gradient(135deg,#3b82f6,#8b5cf6)}
+    .gt{background:linear-gradient(90deg,#3b82f6,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    header{background:rgba(18,18,26,.97);border-bottom:1px solid #1f2937;position:sticky;top:0;z-index:50;backdrop-filter:blur(14px)}
+    .hinner{max-width:1300px;margin:0 auto;padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:4rem}
+    nav a{color:#9ca3af;font-size:.875rem;text-decoration:none;transition:color .2s}
+    nav a:hover{color:#fff}
+    nav a.active{color:#3b82f6;font-weight:600}
+    .btn{display:inline-flex;align-items:center;gap:.4rem;border:none;cursor:pointer;font-weight:600;border-radius:.5rem;padding:.5rem 1.1rem;font-size:.875rem;transition:all .2s}
+    .btn-blue{background:linear-gradient(135deg,#3b82f6,#8b5cf6);color:#fff}
+    .btn-blue:hover{opacity:.88}
+    .btn-ghost{background:transparent;border:1px solid #374151;color:#9ca3af}
+    .btn-ghost:hover{border-color:#6b7280;color:#fff}
+    .btn-active{background:linear-gradient(135deg,#3b82f6,#8b5cf6);color:#fff;border:none}
+    select{background:#1f2937;border:1px solid #374151;color:#fff;border-radius:.5rem;padding:.55rem .85rem;font-size:.875rem;outline:none;width:100%}
+    select option{background:#1f2937}
+    .show-card{background:#12121a;border:1px solid #1f2937;border-radius:.875rem;overflow:hidden;transition:border-color .25s,transform .2s;cursor:pointer}
+    .show-card:hover{border-color:#3b82f6;transform:translateY(-2px)}
+    .bdg{display:inline-block;padding:.2rem .6rem;border-radius:9999px;font-size:.72rem;font-weight:700}
+    .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:100;align-items:center;justify-content:center;padding:1rem}
+    .overlay.open{display:flex}
+    .mbox{background:#12121a;border:1px solid #1f2937;border-radius:1.1rem;max-width:560px;width:100%;max-height:90vh;overflow-y:auto;position:relative}
+    footer{background:#12121a;border-top:1px solid #1f2937;padding:1.75rem 1.5rem;text-align:center;color:#6b7280;font-size:.875rem;margin-top:3rem}
+    .countdown{display:flex;gap:.5rem;margin-top:.75rem}
+    .cbox{background:#1f2937;border-radius:.4rem;padding:.4rem .65rem;text-align:center;min-width:50px}
+    .cnum{font-size:1.2rem;font-weight:800;color:#3b82f6;line-height:1}
+    .clbl{font-size:.6rem;color:#9ca3af;margin-top:.15rem}
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="hinner">
+    <a href="index.html" style="display:flex;align-items:center;gap:.5rem;text-decoration:none">
+      <div class="g" style="width:2.25rem;height:2.25rem;border-radius:.6rem;display:flex;align-items:center;justify-content:center">
+        <svg style="width:1.2rem;height:1.2rem" fill="none" stroke="#fff" stroke-width="2" viewBox="0 0 24 24"><circle cx="5.5" cy="17.5" r="2.5"/><circle cx="18.5" cy="17.5" r="2.5"/><path d="M8 17.5h7M5.5 17.5L8 10l4-4h4l2.5 7M8 10h8"/></svg>
+      </div>
+      <span style="font-size:1.3rem;font-weight:800" class="gt">BikeX</span>
+    </a>
+    <nav style="display:flex;align-items:center;gap:1.25rem">
+      <a href="index.html">Főoldal</a>
+      <a href="marketplace.html">Marketplace</a>
+      <a href="#" class="active">Shows</a>
+      <a href="login.html" style="border:1px solid #374151;padding:.4rem .9rem;border-radius:.5rem">Belépés</a>
+      <a href="register.html" class="btn btn-blue" style="text-decoration:none;font-size:.875rem">Regisztráció</a>
+    </nav>
+  </div>
+</header>
+
+<section style="background:#12121a;padding:3rem 1.5rem 2.5rem;border-bottom:1px solid #1f2937">
+  <div style="max-width:1300px;margin:0 auto;text-align:center">
+    <span style="display:inline-flex;align-items:center;gap:.5rem;background:rgba(139,92,246,.1);border:1px solid rgba(139,92,246,.25);border-radius:9999px;padding:.3rem 1rem;font-size:.78rem;color:#8b5cf6;margin-bottom:1rem">
+      <span style="width:.45rem;height:.45rem;background:#8b5cf6;border-radius:50%"></span>
+      24 esemény · 18 ország · 2026
+    </span>
+    <h1 style="font-size:clamp(1.6rem,4vw,2.75rem);font-weight:800;margin-bottom:.6rem" class="gt">International Bike Shows</h1>
+    <p style="color:#9ca3af;max-width:480px;margin:0 auto">Ne maradj le a világ legjobb kerékpáros eseményeiről!</p>
+  </div>
+</section>
+
+<main style="max-width:1300px;margin:0 auto;padding:2rem 1.5rem">
+
+  <!-- Szűrő -->
+  <div style="background:#12121a;border:1px solid #1f2937;border-radius:.85rem;padding:1.25rem;margin-bottom:1.75rem">
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:.75rem;align-items:end">
+      <div>
+        <label style="display:block;font-size:.72rem;color:#9ca3af;margin-bottom:.3rem;text-transform:uppercase">Kategória</label>
+        <select id="fCat" onchange="renderShows()">
+          <option value="">Összes</option>
+          <option value="expo">🏛 Kiállítás</option>
+          <option value="competition">🏆 Verseny</option>
+          <option value="festival">🎉 Fesztivál</option>
+          <option value="workshop">🔧 Workshop</option>
+        </select>
+      </div>
+      <div>
+        <label style="display:block;font-size:.72rem;color:#9ca3af;margin-bottom:.3rem;text-transform:uppercase">Ország</label>
+        <select id="fCountry" onchange="renderShows()">
+          <option value="">Bárhol</option>
+          <option value="Germany">Németország</option>
+          <option value="Austria">Ausztria</option>
+          <option value="France">Franciaország</option>
+          <option value="Italy">Olaszország</option>
+          <option value="Hungary">Magyarország</option>
+          <option value="USA">USA</option>
+        </select>
+      </div>
+      <div style="display:flex;align-items:flex-end">
+        <button id="upcomingBtn" onclick="toggleUpcoming()" class="btn btn-ghost" style="width:100%">
+          📅 Csak közelgő
+        </button>
+      </div>
+      <button class="btn btn-blue" onclick="renderShows()">
+        <svg style="width:.9rem;height:.9rem" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+        Szűrés
+      </button>
+    </div>
+  </div>
+
+  <!-- Eredmény sor -->
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem">
+    <p style="color:#9ca3af;font-size:.875rem"><span id="rcnt" style="color:#fff;font-weight:700">12</span> esemény találva</p>
+  </div>
+
+  <!-- Grid -->
+  <div id="showGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:1.25rem"></div>
+  <div id="emptyShows" style="display:none;text-align:center;padding:4rem"><div style="font-size:4rem;margin-bottom:1rem">🎪</div><h3 style="font-size:1.2rem;font-weight:700;margin-bottom:.5rem">Nincs találat</h3><p style="color:#9ca3af">Próbálj más szűrési feltételeket</p></div>
+</main>
+
+<!-- Modal -->
+<div class="overlay" id="modal" onclick="if(event.target===this)closeModal()">
+  <div class="mbox">
+    <button onclick="closeModal()" style="position:absolute;top:.9rem;right:.9rem;background:#1f2937;border:none;color:#9ca3af;width:2rem;height:2rem;border-radius:50%;cursor:pointer;font-size:1.1rem;z-index:10">✕</button>
+    <img id="mImg" src="" style="width:100%;height:220px;object-fit:cover;display:block"/>
+    <div style="padding:1.5rem">
+      <div id="mBadge" style="margin-bottom:.75rem"></div>
+      <h2 id="mTitle" style="font-size:1.3rem;font-weight:800;margin-bottom:.4rem"></h2>
+      <p id="mDesc" style="color:#9ca3af;font-size:.875rem;line-height:1.65;margin-bottom:1.25rem"></p>
+      <div id="mDetails" style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:1.25rem"></div>
+      <div id="mCountdown" style="margin-bottom:1.25rem"></div>
+      <div id="mOrg" style="background:#1f2937;border-radius:.6rem;padding:.85rem;margin-bottom:1.25rem;font-size:.875rem"></div>
+      <button class="btn btn-blue" style="width:100%;justify-content:center;padding:.7rem;font-size:.95rem" onclick="alert('Regisztráció az eseményre — hamarosan elérhető az éles appban!')">🎟 Regisztrálok az eseményre</button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:.5rem">
+    <div class="g" style="width:1.75rem;height:1.75rem;border-radius:.4rem;display:flex;align-items:center;justify-content:center"><svg style="width:1rem;height:1rem" fill="none" stroke="#fff" stroke-width="2" viewBox="0 0 24 24"><circle cx="5.5" cy="17.5" r="2.5"/><circle cx="18.5" cy="17.5" r="2.5"/><path d="M8 17.5h7M5.5 17.5L8 10l4-4h4l2.5 7M8 10h8"/></svg></div>
+    <span style="font-weight:700;color:#fff" class="gt">BikeX</span>
+  </div>
+  <p>© 2026 BikeX · Minden jog fenntartva</p>
+</footer>
+
+<script>
+const SHOWS = [
+  { id:1, title:"Eurobike 2026", category:"expo", country:"Germany", city:"Frankfurt", date:"2026-10-14", endDate:"2026-10-17", img:"https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=700&q=80", desc:"A világ legnagyobb kerékpáros kiállítása. 1 800+ kiállító, 60 000+ látogató, az összes top márka egy helyen. A legújabb technológiák, prototípusok és trendek bemutatója.", visitors:"60 000+", exhibitors:"1 800+", price:"€ 25 / nap", org:"Messe Frankfurt GmbH", website:"eurobike.com" },
+  { id:2, title:"Red Bull Rampage 2026", category:"competition", country:"USA", city:"Virgin, Utah", date:"2026-10-22", endDate:"2026-10-23", img:"https://images.unsplash.com/photo-1544191696-15693072e0b8?w=700&q=80", desc:"A freeride mountain biking legextrémebb versenye. A világ legjobb freeride kerékpárosai csapnak össze a Utah sivatagos sziklavilágában.", visitors:"5 000+", exhibitors:"Top 20 versenyző", price:"Ingyenes (helyszínen)", org:"Red Bull Media House", website:"redbull.com/rampage" },
+  { id:3, title:"Bike Festival Garda 2026", category:"festival", country:"Italy", city:"Riva del Garda", date:"2026-05-07", endDate:"2026-05-11", img:"https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=700&q=80", desc:"Európa legnagyobb kerékpáros fesztiválja a Garda-tó partján. MTB, Road, E-Bike — minden kategória, versenyek, tesztek, kiállítás.", visitors:"35 000+", exhibitors:"500+", price:"€ 15 / nap", org:"Garda Events Srl", website:"bikefestival.it" },
+  { id:4, title:"Velo Vienna 2026", category:"expo", country:"Austria", city:"Bécs", date:"2026-11-20", endDate:"2026-11-22", img:"https://images.unsplash.com/photo-1619722398144-4b38a2de7e6b?w=700&q=80", desc:"Ausztria vezető kerékpáros szakkiállítása Bécsben. Városi kerékpározás, e-bike megoldások, infrastruktúra fejlesztések fókuszban.", visitors:"25 000+", exhibitors:"400+", price:"€ 12 / nap", org:"Reed Exhibitions Austria", website:"velo-vienna.at" },
+  { id:5, title:"Budapest Bike Maffia Fesztivál", category:"festival", country:"Hungary", city:"Budapest", date:"2026-09-05", endDate:"2026-09-07", img:"https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=700&q=80", desc:"Budapest legnagyobb kerékpáros fesztiválja. Kritikus tömeg, fixie verseny, BMX show, fesztivál hangulat a Városligetben.", visitors:"12 000+", exhibitors:"150+", price:"Ingyenes", org:"Bike Maffia Egyesület", website:"bikemaffia.hu" },
+  { id:6, title:"Trailhead MTB Workshop", category:"workshop", country:"Austria", city:"Innsbruck", date:"2026-09-15", endDate:"2026-09-15", img:"https://images.unsplash.com/photo-1508789774420-37addc01b9e3?w=700&q=80", desc:"Egész napos MTB technika workshop profi oktatókkal. Fékezési technikák, kanyar, ugrás, drop — minden szint számára.", visitors:"Max 80 fő", exhibitors:"6 oktató", price:"€ 89 / fő", org:"Nordkette Bike School", website:"nordkette.com/workshop" },
+  { id:7, title:"Sea Otter Classic 2026", category:"competition", country:"USA", city:"Monterey, CA", date:"2026-04-16", endDate:"2026-04-19", img:"https://images.unsplash.com/photo-1544966503-7cc5ac882d5d?w=700&q=80", desc:"A kerékpáros világ egyik legnagyobb észak-amerikai ünnepe. XC, enduro, downhill, criterium versenyek + kiállítás.", visitors:"70 000+", exhibitors:"600+", price:"$20–$45", org:"Laguna Seca Events", website:"seaotterclassic.com" },
+  { id:8, title:"Cyclo Cross Worlds 2026", category:"competition", country:"France", city:"Liévin", date:"2026-02-07", endDate:"2026-02-08", img:"https://images.unsplash.com/photo-1505705694340-019e1e335916?w=700&q=80", desc:"Az UCI Cyclo-cross Világbajnokság 2026-ban Franciaországban kerül megrendezésre. Az elit férfi és női mezőny csap össze.", visitors:"20 000+", exhibitors:"Csapatok", price:"€ 15–€ 45", org:"UCI / FFC", website:"uci.org" },
+  { id:9, title:"E-Bike Summit 2026", category:"expo", country:"Germany", city:"München", date:"2026-11-04", endDate:"2026-11-06", img:"https://images.unsplash.com/photo-1593764592116-bfb2a97c642a?w=700&q=80", desc:"Kizárólag elektromos kerékpároknak szentelt szakmai szakkiállítás. Bosch, Shimano, Yamaha — mind ott lesznek.", visitors:"15 000+", exhibitors:"280+", price:"€ 20 / nap", org:"E-Bike Summit GmbH", website:"ebike-summit.de" },
+  { id:10, title:"Gravel Odyssey Hungary", category:"competition", country:"Hungary", city:"Eger", date:"2026-09-20", endDate:"2026-09-21", img:"https://images.unsplash.com/photo-1619722398144-4b38a2de7e6b?w=700&q=80", desc:"Magyarország legnépszerűbb gravel kerékpáros versenye az Egri borvidéken. 80 km és 120 km táv, 2 000 m+ emelkedő.", visitors:"2 000+", exhibitors:"50+", price:"8 500 Ft", org:"Gravel HU Szövetség", website:"gravelodyssey.hu" },
+  { id:11, title:"Tour de France 2026 Start", category:"competition", country:"France", city:"Lille", date:"2026-07-04", endDate:"2026-07-26", img:"https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=700&q=80", desc:"A világ legnagyobb kerékpáros versenye. 21 etap, 3 hét, 176 versenyző. A Grand Depart 2026-ban Lille-ből indul.", visitors:"10 000 000+", exhibitors:"23 csapat", price:"Ingyenes (út mentén)", org:"ASO (Amaury Sport Organisation)", website:"letour.fr" },
+  { id:12, title:"BikeExpo Kelet-Európa 2026", category:"expo", country:"Hungary", city:"Budapest", date:"2026-12-05", endDate:"2026-12-07", img:"https://images.unsplash.com/photo-1544191696-15693072e0b8?w=700&q=80", desc:"A régió vezető kerékpáros szakkiállítása Budapesten, a Hungexpón. Magyar és külföldi márkák, teszteléssel, versennyel.", visitors:"18 000+", exhibitors:"350+", price:"2 500 Ft / nap", org:"Hungexpo Zrt.", website:"bikeexpo.hu" },
+];
+
+let upcomingOnly = false;
+
+function toggleUpcoming() {
+  upcomingOnly = !upcomingOnly;
+  const btn = document.getElementById('upcomingBtn');
+  btn.className = upcomingOnly ? 'btn btn-active' : 'btn btn-ghost';
+  btn.style.width = '100%';
+  renderShows();
+}
+
+function isUpcoming(dateStr) {
+  return new Date(dateStr) >= new Date();
+}
+
+function daysUntil(dateStr) {
+  const diff = new Date(dateStr) - new Date();
+  return Math.ceil(diff / 86400000);
+}
+
+function catBadge(cat) {
+  const map = {
+    expo:       ['#3b82f6','🏛 Kiállítás'],
+    competition:['#ef4444','🏆 Verseny'],
+    festival:   ['#8b5cf6','🎉 Fesztivál'],
+    workshop:   ['#f59e0b','🔧 Workshop'],
+  };
+  const [color, label] = map[cat] || ['#6b7280', cat];
+  return `<span class="bdg" style="background:${color}20;border:1px solid ${color}50;color:${color}">${label}</span>`;
+}
+
+function renderShows() {
+  const cat = document.getElementById('fCat').value;
+  const country = document.getElementById('fCountry').value;
+
+  let list = SHOWS.filter(s => {
+    if (cat && s.category !== cat) return false;
+    if (country && s.country !== country) return false;
+    if (upcomingOnly && !isUpcoming(s.date)) return false;
+    return true;
+  });
+
+  document.getElementById('rcnt').textContent = list.length;
+  const grid = document.getElementById('showGrid');
+  const empty = document.getElementById('emptyShows');
+
+  if (!list.length) { grid.style.display='none'; empty.style.display='block'; return; }
+  empty.style.display='none'; grid.style.display='grid';
+
+  grid.innerHTML = list.map(s => {
+    const days = daysUntil(s.date);
+    const upcoming = days > 0;
+    const dateStr = new Date(s.date).toLocaleDateString('hu-HU', {year:'numeric',month:'long',day:'numeric'});
+    return `
+    <div class="show-card" onclick="openModal(${s.id})">
+      <div style="position:relative">
+        <img src="${s.img}" style="width:100%;height:200px;object-fit:cover;display:block" onerror="this.src='https://via.placeholder.com/700x200/1f2937/3b82f6?text=BikeX'"/>
+        <div style="position:absolute;top:.7rem;left:.7rem;display:flex;gap:.4rem">${catBadge(s.category)}</div>
+        ${upcoming && days <= 60 ? `<div style="position:absolute;top:.7rem;right:.7rem"><span class="bdg" style="background:#22c55e20;border:1px solid #22c55e50;color:#22c55e">⏱ ${days} nap múlva</span></div>` : ''}
+        ${!upcoming ? `<div style="position:absolute;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center"><span style="background:#6b728080;border:1px solid #9ca3af;padding:.35rem .9rem;border-radius:9999px;font-size:.8rem;color:#d1d5db">Lezajlott</span></div>` : ''}
+      </div>
+      <div style="padding:1.1rem">
+        <h3 style="font-weight:800;font-size:1rem;margin-bottom:.3rem">${s.title}</h3>
+        <div style="display:flex;align-items:center;gap:.3rem;color:#9ca3af;font-size:.8rem;margin-bottom:.6rem">
+          <svg style="width:.8rem;height:.8rem" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          ${s.city}, ${s.country}
+          &nbsp;·&nbsp;
+          <svg style="width:.8rem;height:.8rem" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          ${dateStr}
+        </div>
+        <p style="color:#9ca3af;font-size:.8rem;line-height:1.5;margin-bottom:.85rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">${s.desc}</p>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span style="color:#3b82f6;font-weight:700;font-size:.875rem">${s.price}</span>
+          <button class="btn btn-blue" style="font-size:.78rem;padding:.35rem .8rem" onclick="event.stopPropagation();openModal(${s.id})">Részletek →</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openModal(id) {
+  const s = SHOWS.find(x=>x.id===id);
+  if (!s) return;
+  document.getElementById('mImg').src = s.img;
+  document.getElementById('mTitle').textContent = s.title;
+  document.getElementById('mDesc').textContent = s.desc;
+  document.getElementById('mBadge').innerHTML = catBadge(s.category);
+
+  const startDate = new Date(s.date).toLocaleDateString('hu-HU',{year:'numeric',month:'long',day:'numeric'});
+  const endDate   = new Date(s.endDate).toLocaleDateString('hu-HU',{month:'long',day:'numeric'});
+  document.getElementById('mDetails').innerHTML = `
+    <div style="background:#1f2937;border-radius:.5rem;padding:.65rem">
+      <div style="color:#9ca3af;font-size:.7rem;margin-bottom:.2rem">📅 Dátum</div>
+      <div style="font-weight:600;font-size:.8rem">${startDate} – ${endDate}</div>
+    </div>
+    <div style="background:#1f2937;border-radius:.5rem;padding:.65rem">
+      <div style="color:#9ca3af;font-size:.7rem;margin-bottom:.2rem">📍 Helyszín</div>
+      <div style="font-weight:600;font-size:.8rem">${s.city}, ${s.country}</div>
+    </div>
+    <div style="background:#1f2937;border-radius:.5rem;padding:.65rem">
+      <div style="color:#9ca3af;font-size:.7rem;margin-bottom:.2rem">👥 Látogatók</div>
+      <div style="font-weight:600;font-size:.8rem">${s.visitors}</div>
+    </div>
+    <div style="background:#1f2937;border-radius:.5rem;padding:.65rem">
+      <div style="color:#9ca3af;font-size:.7rem;margin-bottom:.2rem">🎟 Belépő</div>
+      <div style="font-weight:600;font-size:.8rem;color:#3b82f6">${s.price}</div>
+    </div>`;
+
+  const days = daysUntil(s.date);
+  if (days > 0) {
+    const cd = document.getElementById('mCountdown');
+    const d = Math.floor(days), h = new Date().getHours(), m = new Date().getMinutes();
+    cd.innerHTML = `<div style="font-size:.8rem;color:#9ca3af;margin-bottom:.4rem">Visszaszámlálás</div>
+      <div class="countdown">
+        <div class="cbox"><div class="cnum">${d}</div><div class="clbl">NAP</div></div>
+        <div class="cbox"><div class="cnum">${24-h}</div><div class="clbl">ÓRA</div></div>
+        <div class="cbox"><div class="cnum">${60-m}</div><div class="clbl">PERC</div></div>
+      </div>`;
+  } else {
+    document.getElementById('mCountdown').innerHTML = '<span style="color:#6b7280;font-size:.8rem">Ez az esemény már lezajlott.</span>';
+  }
+
+  document.getElementById('mOrg').innerHTML = `<div style="color:#9ca3af;font-size:.72rem;margin-bottom:.3rem">Szervező</div><div style="font-weight:600">${s.org}</div><div style="color:#3b82f6;font-size:.8rem;margin-top:.2rem">🌐 ${s.website}</div>`;
+
+  document.getElementById('modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal() { document.getElementById('modal').classList.remove('open'); document.body.style.overflow=''; }
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
+renderShows();
+</script>
+</body>
+</html>
